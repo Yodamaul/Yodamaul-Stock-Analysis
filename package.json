@@ -1,0 +1,17 @@
+{
+  "name": "rapidresp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csvtojson": "^2.0.8",
+    "decision-tree": "^0.3.1",
+    "machine_learning": "^0.1.1",
+    "stocks.js": "0.0.17"
+  }
+}

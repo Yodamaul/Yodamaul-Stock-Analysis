@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+  <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+  <title>JS Bin</title>
+  <!-- production version, optimized for size and speed -->
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://unpkg.com/@ionic/core@latest/dist/ionic.js"></script>
+  <link href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/regression/1.4.0/regression.min.js"></script>
+ <script src="legend.js"></script>
+ <script src="stocks.js"></script>
+ <style>
+  ion-page{height:100vh;}
+  
+  .sk-folding-cube {
+  
+  margin: 20px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  -webkit-transform: rotateZ(45deg);
+          transform: rotateZ(45deg);
+}
+
+.sk-folding-cube .sk-cube {
+  float: left;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  -webkit-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+          transform: scale(1.1); 
+}
+.sk-folding-cube .sk-cube:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #333;
+  -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+          animation: sk-foldCubeAngle 2.4s infinite linear both;
+  -webkit-transform-origin: 100% 100%;
+      -ms-transform-origin: 100% 100%;
+          transform-origin: 100% 100%;
+}
+.sk-folding-cube .sk-cube2 {
+  -webkit-transform: scale(1.1) rotateZ(90deg);
+          transform: scale(1.1) rotateZ(90deg);
+}
+.sk-folding-cube .sk-cube3 {
+  -webkit-transform: scale(1.1) rotateZ(180deg);
+          transform: scale(1.1) rotateZ(180deg);
+}
+.sk-folding-cube .sk-cube4 {
+  -webkit-transform: scale(1.1) rotateZ(270deg);
+          transform: scale(1.1) rotateZ(270deg);
+}
+.sk-folding-cube .sk-cube2:before {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s;
+}
+.sk-folding-cube .sk-cube3:before {
+  -webkit-animation-delay: 0.6s;
+          animation-delay: 0.6s; 
+}
+.sk-folding-cube .sk-cube4:before {
+  -webkit-animation-delay: 0.9s;
+          animation-delay: 0.9s;
+}
+@-webkit-keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; 
+  } 25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; 
+  } 90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; 
+  } 
+}
+
+@keyframes sk-foldCubeAngle {
+  0%, 10% {
+    -webkit-transform: perspective(140px) rotateX(-180deg);
+            transform: perspective(140px) rotateX(-180deg);
+    opacity: 0; 
+  } 25%, 75% {
+    -webkit-transform: perspective(140px) rotateX(0deg);
+            transform: perspective(140px) rotateX(0deg);
+    opacity: 1; 
+  } 90%, 100% {
+    -webkit-transform: perspective(140px) rotateY(180deg);
+            transform: perspective(140px) rotateY(180deg);
+    opacity: 0; 
+  }
+}
+  
+  .fullscreenloading{
+    position:absolute;z-index:2000;height:100vh;width:100vw;
+    background:  #ffce00;
+ 
+    display: flex;           /* establish flex container */
+    flex-direction: column;  /* make main axis vertical */
+    justify-content: center; /* center items vertically, in this case */
+    align-items: center;     /* center items horizontally, in this case */
+  
+}
+
+  </style>
+</head>
+
+<body>
+  <ion-app id="app">
+    <div v-if="loading" class="fullscreenloading">
+
+      <div class="box">
+    <div class="sk-folding-cube">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>
+
+</div>
+<h4><center>
+
+ {{currentSaying}}
+
+</center></h4></div>
+</div>
+    <ion-menu side="start" menu-id="first">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Start Menu</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-item>Menu Item</ion-item>
+          <ion-item>Menu Item</ion-item>
+          <ion-item>Menu Item</ion-item>
+          <ion-item>Menu Item</ion-item>
+          <ion-item>Menu Item</ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-page main>
+
+      <ion-header >
+        <ion-toolbar color="dark">
+        <center>
+          <ion-title>Optiver RR Challenge Prtotype</ion-title></center>
+        </ion-toolbar>
+
+        <ion-toolbar><center>
+          <ion-title><small>  Timor Quest (OPTIVER 1)</small> </ion-title></center>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content fullscreen forceOverscroll overflow-scroll="true" padding>
+          
+
+
+
+<ion-item color="success">
+    <ion-label> <center>
+     Part 1: Regression Analysis</center>
+    </ion-label>
+  </ion-item>
+     <ion-card>    <ion-card-header>
+        <ion-card-title>Pick Main Stock</ion-card-title>
+      </ion-card-header>
+
+       <ion-card-content>
+          
+              <ion-item>
+                <ion-grid>
+                  <ion-row align-self-center> 
+                    <ion-col >
+<span v-if="!main">  Apple
+</span>
+<h1 v-if="main">Apple </h1>
+                    </ion-col>
+                    <ion-col>
+
+                        <ion-button v-bind:color="main ? 'primary' : 'warning'" v-on:click="main=!main"><ion-icon name="swap"></ion-icon></ion-button>
+
+                    </ion-col>
+                    <ion-col>
+                        <span v-if="main">  Google
+                          </span>
+                          <h1 v-if="!main">Google </h1>
+
+                    </ion-col>
+
+                  </ion-row>
+
+                </ion-grid>
+              
+                </ion-item>
+              </ion-card-content>
+            
+
+     </ion-card> 
+<ion-card>
+    <ion-card-header>
+        <ion-card-title>Pick Other Stock to Compare</ion-card-title>
+      </ion-card-header>
+
+        <!-- <ion-item v-for="entry in form">
+          <ion-label>{{entry.val}}</ion-label>
+          <ion-checkbox slot="end" v-on:input="entry.isChecked = $event.target.value" v-bind:value="entry.isChecked"></ion-checkbox>
+        </ion-item> -->
+    <ion-item>
+        <ion-button v-on:click="entry.isChecked =!entry.isChecked" v-bind:color="entry.isChecked ? 'primary' : 'danger'" v-for="entry in form">
+            <ion-icon slot="start" v-bind:name="entry.isChecked ? 'checkmark' : 'close'" ></ion-icon>
+            {{entry.val}}
+          </ion-button>
+
+
+
+    </ion-item>
+</ion-card>  
+      <ion-card>
+
+        <ion-card-content>
+
+            <ion-button v-on:click="a" color="warning" expand="block" fill="outline">Chart and Find Regression</ion-button>
+
+        </ion-card-content>    
+      </ion-card>
+        <ion-card>
+        
+          
+            <ion-card-content>
+              
+        <div class="ct-chart "></div>
+            </ion-card-content>
+            <ion-item v-for="rr in regs">{{rr}}</ion-item>
+          </ion-card>
+
+     
+          <ion-item color="warning">
+            <ion-label> <center>
+             Part 2:Event Analysis</center>
+            </ion-label>
+          </ion-item>
+
+
+
+
+  
+    
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-item v-for="(p,key) in part3">
+             <label v-bind:for="key"> {{key}} </label> <br> <input v-bind:name="key" v-bind:id="key" type="text" v-model="p">
+            </ion-item>
+             
+             </ion-card>
+
+        </ion-col>
+        <ion-col>
+          <ion-card>
+            <ion-item>
+             <ion-button v-on:click="es">Estimate stock value!</ion-button>
+            </ion-item>
+             <ion-item>
+             <h1>The stock will rise:{{willItRise}} </h1>
+            </ion-item>
+             </ion-card>
+          
+        </ion-col>
+
+
+
+      </ion-row>
+
+
+    </ion-grid>
+
+    
+    <ion-item color="tertiary">
+      <ion-label> <center>
+       Part 3: Indicator Analysis</center>
+      </ion-label>
+    </ion-item>
+
+    <ion-card>
+      <ion-card-content>  
+        
+      <p> Indicator analysis effecively will work similar to the one shown above. Instead of boolean values, we will be using the values of Indicators to form a decision tree.</p>
+      </ion-card-content> 
+      
+      </ion-card> 
+   
+<center>
+  <ion-card><img style="width:50vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/CART_tree_titanic_survivors.png/240px-CART_tree_titanic_survivors.png" alt="">
+  </ion-card>
+  
+  </center>
+  
+    
+    
+    
+    
+    
+    
+    
+    <ion-card>
+        <ion-card-content>  <b>
+          Ignore this card. It is here because the framework we're using decided to be a pain in the CSS.        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.       </p>
+        </b>  </ion-card-content> 
+        
+        </ion-card>
+      </ion-content>
+
+    
+    </ion-page>
+
+
+  </ion-app>
+
+
+  <ion-menu-controller></ion-menu-controller>
+  <script>
+    
+    var totalPending = 0;
+    var allData= {};
+   var mainStock;
+    var options = {
+      lineSmooth: false,
+   fullWidth:true
+    };
+    function chartCalcReg(){
+    var ind=0;
+      var chartData = {labels:[],series:[]};
+var first = true;
+var names = [];
+var arrfreg=[];
+      for(var i in allData){
+names.push(i);
+        var ser = [];
+      for(var ii in allData[i]){
+      if(first){
+        chartData.labels.push(""+allData[i][ii].date);
+      }
+      
+ser.push(allData[i][ii].close)
+}
+chartData.series[ind] = ser;
+      first = false;
+ind++;
+    }
+    
+console.log(names);
+for(var i in chartData.series){
+if(names[i]!==mainStock){
+var arr = [];
+for(var ii in chartData.series[i]){
+var art = [];
+var ind = names.indexOf(mainStock);
+art[0] = chartData.series[ind][ii];
+art[1] = chartData.series[i][ii];
+arr[arr.length] = art;
+}
+
+
+
+
+
+
+arrfreg[names[i]]=arr;
+
+
+
+}
+
+}
+
+
+    new Chartist.Line('.ct-chart', chartData, options, [
+        Chartist.plugins.legend({
+            legendNames: names,
+        })]
+    );
+
+    for(var f in arrfreg){
+      var a = arrfreg[f];
+     var r = (regression("linear",a).r2);
+
+      
+      app.regs[app.regs.length] = f +" is "+ r;
+    }
+  }
+    async function request (n) {
+    var result = await stocks.timeSeries({
+      symbol: n,
+      interval: 'monthly',
+      amount: 10
+     });
+     totalPending--;
+       allData[n] = result;
+     if(totalPending ==0){
+       app.loading=false;
+       chartCalcReg();
+     } }
+  
+    var stocks = new Stocks('20G2AJCJQ55HC808');
+    var app = new Vue({
+      el: '#app',
+      data: {loading:false, main:true,
+        currentSaying:"",
+        funnysayings:["We are doing some dark magic. Please hold on.", "Loading...", "“I think it’s wrong that only one company makes the game Monopoly.” – Steven Wright", "What happens when you put 10 economists in a room? You'll get 11 opinions.", "How many economists does it take to change a light bulb? Seven, plus/minus ten." , "Ronald Reagan used to say that if trivial pursuit were designed by economists, it would have 100 questions and 3,000 answers.", "Economic forecasters assume everything, except responsibility.", "Did you know economists have predicted nine out of the last five recessions?", "“You know it's said that an economist is a man who, when he finds something that works in practice, wonders if it works in theory.” – Walter Heller", "“We have 2 classes of forecasters: Those who don't know . . . and those who don't know they don't know. “ - John Kenneth Galbraith", "Why was astrology invented? So economics would seem like an accurate science."  ],
+        message: 'Hello Vue!',
+        regs:[],willItRise:'',
+        part3:{volume:33333,close:23,newProduct:false,newCLevel:false,scandal:false,naturalDisaster:false,newComp:false},
+        form:[
+      { val: 'TSLA', isChecked: false },
+      { val: 'MSFT', isChecked: false },
+      { val: 'AMZN', isChecked: false },
+      { val: 'FB', isChecked: false },
+      { val: 'BRK.A', isChecked: false },
+      { val: 'BABA', isChecked: false },
+      { val: 'JNJ', isChecked: false },
+      { val: 'JPM', isChecked: false },
+      { val: 'XOM', isChecked: false }
+    ]
+      },
+      methods:{a:function(){allData= {};
+     app.loading = true;
+        mainStock= app.main ? 'AAPL' : 'GOOG';
+       var otherStocks = [];
+       for(var o in app.form){
+         if(app.form[o].isChecked){
+        otherStocks.push(app.form[o].val);
+}
+       }
+        totalPending = 1 + otherStocks.length;
+       var mainStockValues = request(mainStock);
+       var others=[];
+       for(var i in otherStocks){
+         others[i] = request(otherStocks[i])
+       }
+       
+
+      },
+      es:function(){ 
+        var data = JSON.parse(JSON.stringify(app.part3));
+        var response;
+        
+        fetch("http://localhost:3000/other", {
+  method: 'POST', // or 'PUT'
+  body: JSON.stringify(data), // data can be `string` or {object}!
+  headers:{
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => res.json()).then(change)
+
+      }
+    
+    }
+    })
+
+
+    function change(t){
+        app.willItRise = t.effect;
+
+    }
+    setInterval(function(){
+      var myArray = app.funnysayings;
+      var r = myArray[Math.floor(Math.random() * myArray.length)];
+      app.currentSaying = r;
+    },5000);
+    const menuCtrl = document.querySelector('ion-menu-controller');
+
+    function openFirst() {
+      menuCtrl.enable(true, 'first');
+      menuCtrl.open('first');
+    }
+
+    function openEnd() {
+      menuCtrl.open('end');
+    }
+
+    function openCustom() {
+      menuCtrl.enable(true, 'custom');
+      menuCtrl.open('custom');
+    }
+
+
+
+  </script>
+</body>
+
+</html>
+
+
+<!-- APIKEY: 20G2AJCJQ55HC808 -->
